@@ -31,6 +31,16 @@ app.use(allowCrossDomain);
 app.use(express.json());
 app.use("/images", express.static("images"))
 app.use(requestLogger)
+app.get("/lessons", async(request, response) => {
+    try {
+        const lessons = await db.collection("Lesson").find().toArray()
+        response.json(lessons) 
+    } catch (error) {
+        response.status(500).json({message:"Failed to Retrieve Lessons"}) 
+        
+    }
+})
+
 app.listen(3000, () => {
     console.log(`Server running on port 3000`);
   });
