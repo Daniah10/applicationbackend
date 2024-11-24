@@ -20,6 +20,16 @@ const requestLogger= (request, response, next)=> {
     console.log('Request body:', request.body);
     next()
 }
+const allowCrossDomain = (request, response, next) => {
+    response.header('Access-Control-Allow-Origin', '*');
+    response.header('Access-Control-Allow-Methods', 'GET, POST, PUT');
+    response.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+};
+
+app.use(allowCrossDomain);
+app.use(express.json());
+app.use("/images", express.static("images"))
 app.use(requestLogger)
 app.listen(3000, () => {
     console.log(`Server running on port 3000`);
