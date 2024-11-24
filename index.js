@@ -70,6 +70,24 @@ app.put('/lesson', async (request, response) => {
         response.status(500).json({ message: "Lesson coudn't be updated"});
     }
 });
+
+app.get('/search', async (request, response) => {
+    try {
+      const stringRegex = new RegExp(request.query.q, 'i');
+      const lessons = await db.collection('Lesson').find({
+        $or: [
+          { topic: { $regex: stringRegex } },
+          { location: { $regex: stringRegex } },
+          { price: Number(request.query.q)},
+          { space: Number(request.query.q) }
+        ]
+      }).toArray();
+      response.json(lessons);
+    } catch (error) {
+      response.status(500).json({ message: "Search failed" });
+    }
+  });
+
 app.listen(3000, () => {
     console.log(`Server running on port 3000`);
   });
