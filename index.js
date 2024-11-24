@@ -40,7 +40,15 @@ app.get("/lessons", async(request, response) => {
         
     }
 })
-
+app.post('/order', async (request, response) => {
+    try {
+        const order = request.body;
+        const result = await db.collection('Order').insertOne(order);
+        response.json(result);
+    } catch (error) {
+        response.status(500).json({ message: "Order coudn't be placed"});
+    }
+});
 app.listen(3000, () => {
     console.log(`Server running on port 3000`);
   });
