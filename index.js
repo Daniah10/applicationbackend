@@ -49,6 +49,27 @@ app.post('/order', async (request, response) => {
         response.status(500).json({ message: "Order coudn't be placed"});
     }
 });
+
+app.put('/lesson', async (request, response) => {
+    if (!request.body.id) {
+        response.status(400).json({ message: "Missing id field" });
+        return
+    }
+
+    try {
+        const result = await db.collection('Lesson').updateOne(
+            { id: Number(request.body.id) },
+            { $set: request.body }
+        );
+        if (result.matchedCount === 0) {
+            response.status(404).json({ message: "There is no lesson with this id" });
+        } else {
+            response.json(result);
+        }
+    } catch (error) {
+        response.status(500).json({ message: "Lesson coudn't be updated"});
+    }
+});
 app.listen(3000, () => {
     console.log(`Server running on port 3000`);
   });
